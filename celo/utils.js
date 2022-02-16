@@ -6,7 +6,7 @@ import { newKitFromWeb3 } from '@celo/contractkit';
 
 const ERC20_DECIMALS = 18;
 const cUSDContractAddress = '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1';
-const FactoryAddress = '0x4726d8709E1f5548Bbe3D40Bc1fd44dB99516FDa';
+const FactoryAddress = '0x76272abDB74DF54D2B65a46363BB810d28C3364E';
 
 let kit;
 
