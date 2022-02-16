@@ -34,18 +34,10 @@ contract RequestFactory {
         string memory _name,
         string memory _image,
         string memory _description,
-        address payable _recipient,
         uint256 _goal
     ) public {
         address newRequestAddress = address(
-            new Request(
-                _name,
-                _image,
-                _description,
-                _recipient,
-                _goal,
-                msg.sender
-            )
+            new Request(_name, _image, _description, _goal, payable(msg.sender))
         );
         deployedRequests.push(newRequestAddress);
     }
@@ -63,9 +55,8 @@ contract Request {
     string image;
     string description;
     uint256 goal;
-    address owner;
+    address payable owner;
     bool requestComplete;
-    address payable recipient;
 
     struct Contribution {
         address contributor;
@@ -80,14 +71,12 @@ contract Request {
         string memory _name,
         string memory _image,
         string memory _description,
-        address payable _recipient,
         uint256 _goal,
-        address _owner
+        address payable _owner
     ) {
         name = _name;
         image = _image;
         description = _description;
-        recipient = _recipient;
         goal = _goal;
         owner = _owner;
     }
@@ -99,13 +88,15 @@ contract Request {
             string memory,
             string memory,
             string memory,
-            uint256
+            uint256,
+            address,
+            bool
         )
     {
-        return (name, image, description, goal);
+        return (name, image, description, goal, owner, requestComplete);
     }
 
-    function contribute(string memory _message, uint256 _amount)
+    function contribute(uint256 _amount, string memory _message)
         public
         payable
     {
@@ -113,7 +104,7 @@ contract Request {
         require(
             IERC20Token(cUsdTokenAddress).transferFrom(
                 msg.sender,
-                address(this),
+                payable(address(this)),
                 _amount
             ),
             "Transfer failed."
@@ -124,7 +115,6 @@ contract Request {
             _message,
             _amount
         );
-
         contributionsLength++;
     }
 
@@ -145,13 +135,15 @@ contract Request {
     }
 
     function finishRequest() public restricted {
-        require(
-            IERC20Token(cUsdTokenAddress).transfer(
-                recipient,
-                IERC20Token(cUsdTokenAddress).balanceOf(address(this))
-            ),
-            "Trasfer Failed"
-        );
+        // require(
+        //   IERC20Token(cUsdTokenAddress).transferFrom(
+        //     payable(address(this)),
+        //     owner,
+        //     getBalance()
+        //   ),
+        //   "Transfer failed."
+        // );
+
         requestComplete = true;
     }
 
