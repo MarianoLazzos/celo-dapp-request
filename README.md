@@ -1,3 +1,14 @@
+## Technologies
+
+This project was developed using:
+
+- Next.js
+- Chakra UI React
+- Solidity
+- Celo Blockchain
+- Celo Wallet
+- cUSD Token
+
 ## About
 
 This app, is a descentralized application that allow to anyone create a Request of whatever and set a Goal to reach, then the people can go the request and help donating some amount of money.
