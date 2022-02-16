@@ -14,3 +14,13 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  position: relative;
+}
+
+svg {
+  z-index: 1;
+}
