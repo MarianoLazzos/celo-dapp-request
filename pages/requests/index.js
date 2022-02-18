@@ -83,6 +83,7 @@ const Requests = () => {
   const handleCreateRequest = async (title, url = '', description, goal) => {
     setSubmitting(true);
     console.log(title, url, description, goal);
+    console.log(accounts[0]);
     try {
       await factory.methods
         .createRequest(

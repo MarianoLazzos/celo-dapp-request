@@ -3,16 +3,19 @@ import styles from './Navbar.module.css';
 import { Flex, Box, useColorMode, IconButton, Button } from '@chakra-ui/react';
 import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 import { connectWallet, isConnected, getBalance } from '../../celo/utils';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 const Navbar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const [connected, setConnected] = useState(false);
   const [balance, setBalance] = useState(0);
+  const router = useRouter();
 
   const handleConnect = async () => {
     try {
       await connectWallet();
+      router.reload();
       setConnected(true);
     } catch (err) {
       console.log(err);

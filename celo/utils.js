@@ -69,11 +69,14 @@ export const approve = async (price, address) => {
 
 export const createRequestsInstances = async (requestsAddress) => {
   await setKit();
-  const requests = Array(requestsAddress.length)
-    .fill()
-    .map((element, index) => {
-      return new kit.web3.eth.Contract(requestABI, requestsAddress[index]);
-    });
+  let requests;
+  if (requestsAddress) {
+    requests = Array(requestsAddress.length)
+      .fill()
+      .map((element, index) => {
+        return new kit.web3.eth.Contract(requestABI, requestsAddress[index]);
+      });
+  }
 
   return requests;
 };
