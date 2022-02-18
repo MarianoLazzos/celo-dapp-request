@@ -106,26 +106,28 @@ const Requests = () => {
   };
 
   const fetchRequestData = async () => {
-    const requests = await Promise.all(
-      Array(requestsContracts.length)
-        .fill()
-        .map((element, index) => {
-          return new Promise(async (resolve, reject) => {
-            let r = await requestsContracts[index].methods.getInfo().call();
-            resolve({
-              address: requestsAddress[index],
-              name: r[0],
-              image: r[1],
-              description: r[2],
-              goal: new BigNumber(r[3]),
-              owner: r[4],
-              requestEnded: r[5],
+    if (requestsContracts) {
+      const requests = await Promise.all(
+        Array(requestsContracts.length)
+          .fill()
+          .map((element, index) => {
+            return new Promise(async (resolve, reject) => {
+              let r = await requestsContracts[index].methods.getInfo().call();
+              resolve({
+                address: requestsAddress[index],
+                name: r[0],
+                image: r[1],
+                description: r[2],
+                goal: new BigNumber(r[3]),
+                owner: r[4],
+                requestEnded: r[5],
+              });
             });
-          });
-        })
-    );
+          })
+      );
 
-    setContractInfo(requests);
+      setContractInfo(requests);
+    }
   };
 
   const renderRequests = () => {
