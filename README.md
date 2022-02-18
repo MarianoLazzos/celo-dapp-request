@@ -16,3 +16,5 @@ The money of the donations accumulates in the contract.
 The owner of the Request is allow to finish the request when he wants. This produce that the money accumulated in the contract transfer to his address and setting the contract as ended, after this the request is finished and not allow more donations.
 
 **Live preview on:** [https://celo-dapp-request.vercel.app/](https://celo-dapp-request.vercel.app/)
+
+If the live preview is not working try to run it locally, you can do it by cloning the repository and after run the command `npm install` in the root folder, then run it with the command `npm run dev`, this will be avaible at `localhost:3000`
