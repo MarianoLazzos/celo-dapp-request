@@ -34,7 +34,6 @@ export const connectWallet = async () => {
         const web3 = new Web3(window.celo);
         kit = newKitFromWeb3(web3);
         const accounts = await kit.web3.eth.getAccounts();
-        console.log(accounts);
         kit.defaultAccount = accounts[0];
       } catch (err) {
         console.log(err);
@@ -96,9 +95,16 @@ export const getBalance = async () => {
 };
 
 export const isConnected = () => {
+  let state = false;
   if (window.celo) {
-    return !window.celo._state.accounts.length == 0;
+    if (window.celo._state.accounts) {
+      state = false;
+      if (window.celo._state.accounts.length !== 0) {
+        state = true;
+      }
+    }
   }
+  return state;
 };
 
 export const getAccounts = async () => {

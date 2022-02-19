@@ -62,7 +62,6 @@ const Requests = () => {
     const ac = await getAccounts();
     const rq = await fetchAllRequests();
     const res = await createRequestsInstances(rq);
-
     setFactory(fc);
     setAccounts(ac);
     setRequestsAddress(rq);
@@ -71,7 +70,9 @@ const Requests = () => {
   }, []);
 
   useEffect(async () => {
-    await fetchRequestData();
+    if (requestsContracts) {
+      await fetchRequestData();
+    }
   }, [requestsContracts]);
 
   useEffect(() => {
@@ -80,17 +81,16 @@ const Requests = () => {
     }
   });
 
+  //Checked
   const handleCreateRequest = async (title, url = '', description, goal) => {
     setSubmitting(true);
-    console.log(title, url, description, goal);
-    console.log(accounts[0]);
     try {
       await factory.methods
         .createRequest(
           title,
           url,
           description,
-          new BigNumber(goal).shiftedBy(18)
+          new BigNumber(goal).shiftedBy(18).toString()
         )
         .send({ from: accounts[0] });
       onClose();
@@ -105,6 +105,7 @@ const Requests = () => {
     setSubmitting(false);
   };
 
+  //Checked
   const fetchRequestData = async () => {
     if (requestsContracts) {
       const requests = await Promise.all(
@@ -125,17 +126,20 @@ const Requests = () => {
             });
           })
       );
-
       setContractInfo(requests);
     }
   };
 
+  //Checked
   const renderRequests = () => {
-    return contractInfo.map((element, index) => {
-      return <RequestCard data={element} />;
-    });
+    if (contractInfo) {
+      return contractInfo.map((element, index) => {
+        return <RequestCard data={element} key={index} />;
+      });
+    }
   };
 
+  //Checked
   const handleModalClick = async () => {
     if (!validateForm()) return;
     try {
@@ -153,6 +157,7 @@ const Requests = () => {
     setSubmitting(false);
   };
 
+  //Checked
   const validateForm = () => {
     let errores = {
       isFormValid: true,
@@ -208,16 +213,30 @@ const Requests = () => {
     return errores.isFormValid;
   };
 
-  const initialFormState = () => {
-    setError({
-      isFormValid: true,
-      errors: {
-        title: false,
-        url: false,
-        description: false,
-        goal: false,
-      },
-    });
+  // const initialFormState = () => {
+  //   setError({
+  //     isFormValid: true,
+  //     errors: {
+  //       title: false,
+  //       url: false,
+  //       description: false,
+  //       goal: false,
+  //     },
+  //   });
+  // };
+
+  //Checked
+  const renderRequestList = () => {
+    if (contractInfo) {
+      if (contractInfo.length !== 0) {
+        return renderRequests();
+      }
+    }
+    return (
+      <Box bg="whiteAlpha.100" p="3" borderRadius="lg" boxShadow="lg">
+        <Heading size="md">No requests yet, Be the first!</Heading>
+      </Box>
+    );
   };
 
   return (
@@ -227,13 +246,7 @@ const Requests = () => {
       </Head>
       <Box>
         <Wrap className="container" justify="center" mt="4">
-          {contractInfo.length !== 0 ? (
-            renderRequests()
-          ) : (
-            <Box bg="whiteAlpha.100" p="3" borderRadius="lg" boxShadow="lg">
-              <Heading size="md">No requests yet, Be the first!</Heading>
-            </Box>
-          )}
+          {renderRequestList()}
         </Wrap>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>

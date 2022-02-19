@@ -15,12 +15,17 @@ const Navbar = () => {
   const handleConnect = async () => {
     try {
       await connectWallet();
-      router.reload();
       setConnected(true);
     } catch (err) {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setConnected(isConnected());
+    }, 200);
+  }, []);
 
   useEffect(async () => {
     setConnected(isConnected());
@@ -83,9 +88,6 @@ const Navbar = () => {
           <IconButton aria-label="Toggle Mode" onClick={toggleColorMode}>
             {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
           </IconButton>
-          {/* <Button onClick={handleConnect} margin="0px 10px">
-            Connect Wallet
-          </Button> */}
           {renderBalance()}
         </Flex>
       </Flex>
