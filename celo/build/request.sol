@@ -51,12 +51,16 @@ contract Request {
     address internal cUsdTokenAddress =
         0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1;
 
+    uint requestWindow = 2 weeks;
     string name;
     string image;
     string description;
     uint256 goal;
     address payable owner;
     bool requestComplete;
+    uint requestedOn;
+
+    event requestClosed(address indexed owner, uint closedOn, uint moneyTransfered);
 
     struct Contribution {
         address contributor;
@@ -79,6 +83,7 @@ contract Request {
         description = _description;
         goal = _goal;
         owner = _owner;
+        requestedOn = block.timestamp;
     }
 
     function getInfo()
@@ -135,6 +140,7 @@ contract Request {
     }
 
     function finishRequest() public restricted {
+        require(block.timestamp > requestedOn + requestWindow);
         // require(
         //   IERC20Token(cUsdTokenAddress).transferFrom(
         //     payable(address(this)),
@@ -144,7 +150,9 @@ contract Request {
         //   "Transfer failed."
         // );
 
+        uint moneyTransfered = getBalance();
         requestComplete = true;
+        emit requestClosed(owner, block.timestamp, moneyTransfered);
     }
 
     modifier restricted() {
